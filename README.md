@@ -13,3 +13,19 @@ Sentinel_V2 is an automated, multi-sensor Endpoint Detection and Response (EDR) 
 - **Language:** Python
 - **Environment:** Ubuntu Linux / Windows 11
 - **Alerting:** Slack API Webhooks
+
+## 📦 Latest Release: `v2.0.0`
+
+The official release package is available for testing:
+* **Download:** [Sentinel_V2 v2.0.0 Release Package](https://github.com/Fikashongwe/Sentinel_V2/releases/tag/v2.0.0)
+* **Contents:**
+  * `sentinel_v2.py` – Core multi-sensor detection script.
+  * `SentinelV2.spec` – Build configuration specification.
+
+---
+
+## 🚀 Getting Setup
+
+### Dependencies
+```bash
+pip install psutil wmi pywin32 requests urllib3
