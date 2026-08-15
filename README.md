@@ -24,8 +24,12 @@ The official release package is available for testing:
 
 ---
 
+---
+
 ## 🚀 Getting Setup
 
 ### Dependencies
 ```bash
 pip install psutil wmi pywin32 requests urllib3
+# Compilation
+python -m PyInstaller SentinelV2.spec
