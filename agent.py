@@ -82,22 +82,26 @@ def handle_remote_command(command):
     return True
 
 def ntfy_listener_loop(topic_url):
-    """Poll the operational endpoint with robust connection error handling."""
+    """Poll the operational endpoint with streaming enabled."""
     logger.info(f"Listening for operational triggers on topic: {topic_url}")
+    json_url = f"{topic_url}/json"
     while True:
         try:
-            response = http.request('GET', topic_url, timeout=5.0)
-            if response.status == 200:
-                command = response.data.decode('utf-8').strip()
-                if command:
-                    active = handle_remote_command(command)
-                    if not active:
-                        break
-        except urllib3.exceptions.HTTPError as he:
-            logger.error(f"HTTP error during polling: {he}")
+            response = http.request('GET', json_url, preload_content=False, timeout=None)
+            for line in response.stream(amt=1024, decode_content=True):
+                if line:
+                    import json
+                    try:
+                        event = json.loads(line.decode('utf-8'))
+                        if event.get("event") == "message":
+                            msg = event.get("message", "")
+                            handle_remote_command(msg)
+                    except Exception:
+                        pass
         except Exception as e:
-            logger.error(f"Error in listener loop: {e}")
-
+            logger.error(f"Listener error: {e}")
+            import time
+            time.sleep(5.0)
 if __name__ == "__main__":
     logger.info("Starting Sentinel_V2 Agent...")
     send_slack_alert("🚀 *Sentinel_V2*: Agent initialized and running.")
